@@ -16,13 +16,14 @@ object PatientService {
 }
 
 class PatientService(requestContext: RequestContext) extends Actor {
+  import system.dispatcher
+  import PatientService._
 
   implicit val system = context.system
-  import system.dispatcher
   val log = Logging(system, getClass)
 
   def receive = {
-    case PatientService.SpecimenCounts(pnumber) =>
+    case SpecimenCounts(pnumber) =>
       specimenCounts(pnumber)
       context.stop(self)
   }
@@ -33,10 +34,7 @@ class PatientService(requestContext: RequestContext) extends Actor {
     import PatientJsonProtocol._
     import SprayJsonSupport._
 
-    val counts = Set(
-      SpecimenCount("plasma", 4),
-      SpecimenCount("blood", 5))
-    requestContext.complete(PatientSpecimenCounts(pnumber, counts))
+    requestContext.complete(PatientRepository.specimenCounts(pnumber))
   }
 
 }

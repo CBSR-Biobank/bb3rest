@@ -8,8 +8,10 @@ import spray.http._
 import MediaTypes._
 import spray.json.DefaultJsonProtocol
 
-// we don't implement our route structure directly in the service actor because
-// we want to be able to test it independently, without having to spin up an actor
+/**
+  * we don't implement our route structure directly in the service actor because
+  * we want to be able to test it independently, without having to spin up an actor
+  */
 class Bb3ServiceActor extends Actor with Bb3Service {
 
   // the HttpService trait defines only one abstract member, which
@@ -22,7 +24,12 @@ class Bb3ServiceActor extends Actor with Bb3Service {
   def receive = runRoute(patientRoute)
 }
 
-// this trait defines our service behavior independently from the service actor
+/** This trait defines our service behavior independently from the service actor.
+  *
+  * Example taken from here:
+  *
+  * http://gagnechris.wordpress.com/2013/09/15/building-restful-apis-with-scala-using-spray/
+  */
 trait Bb3Service extends HttpService {
 
   val patientRoute = {

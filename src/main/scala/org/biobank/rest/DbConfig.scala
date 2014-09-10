@@ -21,7 +21,7 @@ object DbSession {
     user     = dbConfig.user,
     password = dbConfig.password)
 
-  def session = database.createSession
+  val session = database.createSession
 
 }
 

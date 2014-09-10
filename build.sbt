@@ -29,6 +29,8 @@ libraryDependencies ++= {
   val akkaV = "2.3.5"
   val sprayV = "1.3.1"
   Seq(
+    "com.github.nscala-time"     %% "nscala-time"          % "1.2.0",
+    "com.github.tototoshi"       %% "slick-joda-mapper"    % "1.2.0",
     "org.slf4j"                  %  "slf4j-simple"         % "1.7.2",
     "com.typesafe.slick"         %% "slick"                % "2.1.0",
     "mysql"                      %  "mysql-connector-java" % "5.1.28",
