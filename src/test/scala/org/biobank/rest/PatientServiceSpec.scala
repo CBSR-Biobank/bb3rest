@@ -5,7 +5,7 @@ import spray.testkit.Specs2RouteTest
 import spray.http._
 import StatusCodes._
 
-class PatientServiceSpec extends Specification with Specs2RouteTest with PatientService {
+class Bb3ServiceSpec extends Specification with Specs2RouteTest with Bb3Service {
   def actorRefFactory = system
 
   "PatientService" should {
