@@ -14,17 +14,21 @@ object PatientRepository {
 
   implicit val session = DbSession.session
 
-  implicit val specimenCountResult = GetResult(r => SpecimenCount(r.<<, r.<<))
-
+  /** Returns the spcimen counts for a patient. The patient's number is used to identify the patient.
+    */
   def specimenCounts(pnumber: String) = {
-    val qryString = s"""SELECT specimen_type,count(*) as count
+    val qryString = s"""SELECT center,specimen_type,count(*) as count
       |FROM specimen_webtable
       |WHERE pnumber = ?
-      |GROUP BY specimen_type
-      |ORDER BY specimen_type""".stripMargin
+      |GROUP BY center, specimen_type
+      |ORDER BY center, specimen_type""".stripMargin
 
-    val qry = Q.query[String, SpecimenCount](qryString)
+    val qry = Q.query[String, (String, String, Int)](qryString)
     val counts = qry(pnumber).list
-    PatientSpecimenCounts(pnumber, counts)
+
+    // group by centers
+    val centerMap = counts.groupBy(_._1).mapValues(_.map(x => SpecimenCount(x._2, x._3)))
+    val centerSpecimenCounts = centerMap.map{ case (k,v) => CenterSpecimenCounts(k, v) }.toList
+    PatientSpecimenCounts(pnumber, centerSpecimenCounts)
   }
 }
