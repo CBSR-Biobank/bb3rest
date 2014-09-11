@@ -33,10 +33,6 @@ class Bb3ServiceActor extends Actor with Bb3Service {
 trait Bb3Service extends HttpService {
 
   val patientRoute = {
-    import spray.httpx.SprayJsonSupport.sprayJsonMarshaller
-    import spray.httpx.SprayJsonSupport.sprayJsonUnmarshaller
-    import JsonImplicits._
-
     pathPrefix("patients") {
       path(Segment) { pnumber: String =>
         get {
