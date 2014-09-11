@@ -1,6 +1,6 @@
 package org.biobank.rest.domain
 
-import org.biobank.rest.DbSession
+import org.biobank.rest.DbConfig
 
 import scala.slick.driver.MySQLDriver.simple._
 import scala.slick.jdbc.{ GetResult, StaticQuery => Q }
@@ -12,7 +12,7 @@ import com.github.tototoshi.slick.MySQLJodaSupport._
 
 object PatientRepository {
 
-  implicit val session = DbSession.session
+  implicit val session = DbConfig.session
 
   /** Returns the spcimen counts for a patient. The patient's number is used to identify the patient.
     */

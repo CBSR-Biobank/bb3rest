@@ -2,27 +2,36 @@ package org.biobank.rest
 
 import com.typesafe.config._
 import scala.slick.jdbc.JdbcBackend.Database
+import java.io.File
 
-case class DbConfig(host: String, name: String, user: String, password: String)
+object DbConfig {
 
-object DbSession {
+  case class DbConfigParams(host: String, name: String, user: String, password: String)
 
-  val conf = ConfigFactory.load()
+  val ConfigFileName = "db.conf"
 
-  val dbConfig = DbConfig(
-    conf.getString("dbhost"),
-    conf.getString("dbname"),
-    conf.getString("dbuser"),
-    conf.getString("dbpassword"))
+  val ConfigPath = "db"
+
+  val conf = ConfigFactory.parseFile(new File(ConfigFileName)).resolve()
+
+  if (!conf.hasPath(ConfigPath)) {
+    println(s"\tError: settings not found in ${ConfigFileName}")
+    System.exit(1)
+  }
+
+  val dbConf = conf.getConfig(ConfigPath);
+
+  val dbConfigParams = DbConfigParams(
+    dbConf.getString("host"),
+    dbConf.getString("name"),
+    dbConf.getString("user"),
+    dbConf.getString("password"))
 
   val database = Database.forURL(
-    s"jdbc:mysql://${dbConfig.host}:3306/${dbConfig.name}",
+    s"jdbc:mysql://${dbConfigParams.host}:3306/${dbConfigParams.name}",
     driver   = "com.mysql.jdbc.Driver",
-    user     = dbConfig.user,
-    password = dbConfig.password)
+    user     = dbConfigParams.user,
+    password = dbConfigParams.password)
 
   val session = database.createSession
-
 }
-
-
