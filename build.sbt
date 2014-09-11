@@ -1,13 +1,29 @@
+import AssemblyKeys._
+
+assemblySettings
+
 name := "bb3rest"
 
-organization  := "org.biobank"
+organization := "org.biobank"
 
-version       := "0.1-SNAPSHOT"
+version := "0.1-SNAPSHOT"
+
+assemblyOption in assembly ~= { _.copy(prependShellScript = Some(defaultShellScript)) }
+
+jarName in assembly := { s"${name.value}-${version.value}" }
+
+buildInfoSettings
+
+sourceGenerators in Compile <+= buildInfo
+
+buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
+
+buildInfoPackage := "buildinfo"
 
 scalaVersion  := "2.11.2"
 
 scalacOptions in ThisBuild ++= Seq(
-  "-target:jvm-1.7",
+  "-target:jvm-1.6",
   "-encoding", "UTF-8",
   "deprecation",        // warning and location for usages of deprecated APIs
   "-feature",           // warning and location for usages of features that should be imported explicitly
@@ -43,5 +59,7 @@ libraryDependencies ++= {
     "org.specs2"                 %% "specs2-core"          % "2.3.11" % "test"
   )
 }
+
+test in assembly := {}
 
 Revolver.settings
