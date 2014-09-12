@@ -49,6 +49,7 @@ libraryDependencies ++= {
     "com.github.tototoshi"       %% "slick-joda-mapper"    % "1.2.0",
     "org.slf4j"                  %  "slf4j-simple"         % "1.7.2",
     "com.typesafe.slick"         %% "slick"                % "2.1.0",
+    "c3p0"                       %  "c3p0"                 % "0.9.1.2",
     "mysql"                      %  "mysql-connector-java" % "5.1.28",
     "io.spray"                   %% "spray-can"            % sprayV,
     "io.spray"                   %% "spray-routing"        % sprayV,

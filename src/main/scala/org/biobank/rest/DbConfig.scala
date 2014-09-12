@@ -3,6 +3,7 @@ package org.biobank.rest
 import com.typesafe.config._
 import scala.slick.jdbc.JdbcBackend.Database
 import java.io.File
+import com.mchange.v2.c3p0.ComboPooledDataSource
 
 object DbConfig {
 
@@ -11,6 +12,8 @@ object DbConfig {
   val ConfigFileName = "db.conf"
 
   val ConfigPath = "db"
+
+  val Driver = "com.mysql.jdbc.Driver"
 
   val conf = ConfigFactory.parseFile(new File(ConfigFileName)).resolve()
 
@@ -27,11 +30,23 @@ object DbConfig {
     dbConf.getString("user"),
     dbConf.getString("password"))
 
+  val jdbcUrl = s"jdbc:mysql://${dbConfigParams.host}:3306/${dbConfigParams.name}"
+
   val database = Database.forURL(
-    s"jdbc:mysql://${dbConfigParams.host}:3306/${dbConfigParams.name}",
-    driver   = "com.mysql.jdbc.Driver",
+    jdbcUrl,
+    driver   = Driver,
     user     = dbConfigParams.user,
     password = dbConfigParams.password)
 
-  val session = database.createSession
+  val databasePool = {
+    val ds = new ComboPooledDataSource
+    ds.setDriverClass(Driver)
+    ds.setJdbcUrl(jdbcUrl)
+    ds.setMinPoolSize(20)
+    ds.setAcquireIncrement(5)
+    ds.setMaxPoolSize(100)
+    ds.setUser(dbConfigParams.user)
+    ds.setPassword(dbConfigParams.password)
+    Database.forDataSource(ds)
+  }
 }
