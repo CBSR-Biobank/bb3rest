@@ -30,7 +30,7 @@ object DbConfig {
     dbConf.getString("user"),
     dbConf.getString("password"))
 
-  val jdbcUrl = s"jdbc:mysql://${dbConfigParams.host}:3306/${dbConfigParams.name}"
+  val jdbcUrl = s"jdbc:mysql://${dbConfigParams.host}:3306/${dbConfigParams.name}?autoReconnect=true"
 
   val database = Database.forURL(
     jdbcUrl,
@@ -42,11 +42,13 @@ object DbConfig {
     val ds = new ComboPooledDataSource
     ds.setDriverClass(Driver)
     ds.setJdbcUrl(jdbcUrl)
-    ds.setMinPoolSize(20)
-    ds.setAcquireIncrement(5)
-    ds.setMaxPoolSize(100)
     ds.setUser(dbConfigParams.user)
     ds.setPassword(dbConfigParams.password)
+    ds.setInitialPoolSize(5)
+    ds.setMinPoolSize(5)
+    ds.setMaxPoolSize(15)
+    ds.setCheckoutTimeout(1000)
+    ds.setAcquireIncrement(5)
     Database.forDataSource(ds)
   }
 }
