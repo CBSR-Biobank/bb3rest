@@ -49,6 +49,7 @@ object DbConfig {
     ds.setMaxPoolSize(15)
     ds.setCheckoutTimeout(1000)
     ds.setAcquireIncrement(5)
+    ds.setTestConnectionOnCheckout(true)
     Database.forDataSource(ds)
   }
 }
