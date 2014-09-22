@@ -1,7 +1,7 @@
 #!/bin/sh
 
-#HOST="aicml-med.cs.ualberta.ca"
-HOST="localhost"
+HOST="aicml-med.cs.ualberta.ca"
+#HOST="localhost"
 
 curl -i -H "Accept: application/json" "http://$HOST:9900/patients/1102/specimens/counts"
 

@@ -41,6 +41,11 @@ trait Bb3Service extends HttpService {
           }
         }
       } ~
+      path(Segment / "study") { pnumber =>
+        requestContext =>
+        val patientService = actorRefFactory.actorOf(Props(new PatientService(requestContext)))
+        patientService ! PatientService.StudySpecimens(pnumber)
+      } ~
       path(Segment / "specimens") { pnumber: String =>
         get {
           complete {

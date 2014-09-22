@@ -6,10 +6,10 @@ case class SpecimenCount(specimenType: String, count: Int)
 
 case class CenterSpecimenCounts(storageCenter: String, specimenTypes: List[SpecimenCount])
 
-case class PatientSpecimenCounts(pnumber: String, storageCenters: List[CenterSpecimenCounts])
+case class PatientSpecimenCounts(pnumber: String, study: String, storageCenters: List[CenterSpecimenCounts])
 
-object PatientJsonProtocol extends DefaultJsonProtocol {
+object SpecimenCountsJsonProtocol extends DefaultJsonProtocol {
   implicit val specimenCountFormat = jsonFormat2(SpecimenCount)
   implicit val centerSpecimenCountsFormat = jsonFormat2(CenterSpecimenCounts)
-  implicit val patientSpecimenCountsFormat = jsonFormat2(PatientSpecimenCounts)
+  implicit val patientSpecimenCountsFormat = jsonFormat3(PatientSpecimenCounts)
 }
