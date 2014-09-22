@@ -6,7 +6,7 @@ case class SpecimenType(specimenType: String)
 
 case class StudySpecimens(name: String, description: String, specimenTypes: List[SpecimenType])
 
-case class PatientStudySpecimens(pnumber: String, studySpecimens: StudySpecimens)
+case class PatientStudySpecimens(pnumber: String, study: StudySpecimens)
 
 object StudySpecimensJsonProtocol extends DefaultJsonProtocol {
   implicit val specimenTypeFormat = jsonFormat1(SpecimenType)
