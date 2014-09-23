@@ -47,13 +47,12 @@ object PatientRepository {
 
         DbConfig.databasePool.withSession { implicit session =>
           val qry = Q.query[Int, (String)](qryString)
-          val counts = qry(study.id).list
+          val specimenTypes = qry(study.id).list
 
-          if (counts.isEmpty) {
+          if (specimenTypes.isEmpty) {
             throw new IllegalStateException(s"could not find study aliquot types: $study.name")
           } else {
             // group by studies
-            val specimenTypes = counts.map(SpecimenType(_))
             Some(PatientStudySpecimens(
               pnumber, StudySpecimenTypes(study.name, study.description, specimenTypes)))
           }
@@ -106,13 +105,13 @@ object PatientRepository {
 
         DbConfig.databasePool.withSession { implicit session =>
           val qry = Q.query[String, (String, String, DateTime, String, Option[BigDecimal])](qryString)
-          val counts = qry(pnumber).list
+          val aliquots = qry(pnumber).list
 
-          if (counts.isEmpty) {
+          if (aliquots.isEmpty) {
             None
           } else {
             // group by centres
-            val centersMap = counts.groupBy(_._1).mapValues(
+            val centersMap = aliquots.groupBy(_._1).mapValues(
               _.map(x => Specimen(x._2, dateFormat.print(x._3), x._4, x._5)))
             val patientSpecimens = centersMap.map{ case (k,v) => CenterSpecimens(k, v) }.toList
             Some(PatientSpecimens(pnumber, study.name, patientSpecimens))
