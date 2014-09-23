@@ -38,7 +38,7 @@ object DbConfig {
     user     = dbConfigParams.user,
     password = dbConfigParams.password)
 
-  val databasePool = {
+  val databaseSource = {
     val ds = new ComboPooledDataSource
     ds.setDriverClass(Driver)
     ds.setJdbcUrl(jdbcUrl)
@@ -50,6 +50,9 @@ object DbConfig {
     ds.setCheckoutTimeout(1000)
     ds.setAcquireIncrement(5)
     ds.setTestConnectionOnCheckout(true)
-    Database.forDataSource(ds)
+    //Database.forDataSource(ds)
+    ds
   }
+
+  val databasePool = Database.forDataSource(databaseSource)
 }
