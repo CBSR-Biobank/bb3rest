@@ -9,9 +9,12 @@ import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import com.github.nscala_time.time.Imports._
 import com.github.tototoshi.slick.MySQLJodaSupport._
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 object PatientRepository {
 
+  val Log = LoggerFactory.getLogger(this.getClass)
 
   /** Returns the spcimen counts for a patient. The patient's number is used to identify the patient.
     */
@@ -59,6 +62,53 @@ object PatientRepository {
       val centerMap = counts.groupBy(_._2).mapValues(_.map(x => SpecimenCount(x._3, x._4)))
       val centerSpecimenCounts = centerMap.map{ case (k,v) => CenterSpecimenCounts(k, v) }.toList
       PatientSpecimenCounts(pnumber, counts(0)._1, centerSpecimenCounts)
+    }
+  }
+
+  /** Returns the spcimen counts for a patient. The patient's number is used to identify the patient.
+    */
+  def visits(pnumber: String) = {
+    // val qryString = s"""SELECT vnumber,date_drawn,count(*)
+    //   |FROM specimen_webtable
+    //   |WHERE pnumber = ?
+    //   |GROUP BY vnumber,date_drawn
+    //   |ORDER BY vnumber,date_drawn""".stripMargin
+
+    // val dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ")
+
+    // DbConfig.databasePool.withSession { implicit session =>
+    //   val qry = Q.query[String, (String, String, DateTime, String, BigDecimal)](qryString)
+    //   val counts = qry(pnumber).list
+
+    //   Log.info(s"counts: $counts")
+
+    //   // group by centres
+    //   val centersMap = counts.groupBy(_._1).mapValues(
+    //     _.map(x => Specimen(x._2, dateFormat.print(x._3), x._4, x._5)))
+    //   val patientSpecimens = centersMap.map{ case (k,v) => CenterSpecimens(k, v) }.toList
+    //   PatientSpecimens(pnumber, patientSpecimens)
+    // }
+  }
+
+  /** Returns the spcimen counts for a patient. The patient's number is used to identify the patient.
+    */
+  def aliquots(pnumber: String) = {
+    val qryString = s"""SELECT center,inventory_id,date_drawn,specimen_type,quantity
+      |FROM specimen_webtable
+      |WHERE pnumber = ?
+      |ORDER BY date_drawn""".stripMargin
+
+    val dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ")
+
+    DbConfig.databasePool.withSession { implicit session =>
+      val qry = Q.query[String, (String, String, DateTime, String, Option[BigDecimal])](qryString)
+      val counts = qry(pnumber).list
+
+      // group by centres
+      val centersMap = counts.groupBy(_._1).mapValues(
+        _.map(x => Specimen(x._2, dateFormat.print(x._3), x._4, x._5)))
+      val patientSpecimens = centersMap.map{ case (k,v) => CenterSpecimens(k, v) }.toList
+      PatientSpecimens(pnumber, patientSpecimens)
     }
   }
 }

@@ -13,6 +13,7 @@ import scala.util.{ Success, Failure }
 
 object PatientService {
   case class StudySpecimens(pnumber: String)
+  case class SpecimenAliquots(pnumber: String)
   case class SpecimenCounts(pnumber: String)
 }
 
@@ -21,6 +22,7 @@ class PatientService(requestContext: RequestContext) extends Actor {
   import PatientService._
   import StudySpecimensJsonProtocol._
   import SpecimenCountsJsonProtocol._
+  import PatientSpecimensJsonProtocol._
   import SprayJsonSupport._
 
   implicit val system = context.system
@@ -29,6 +31,11 @@ class PatientService(requestContext: RequestContext) extends Actor {
   def receive = {
     case StudySpecimens(pnumber) => {
       studySpecimens(pnumber)
+      context.stop(self)
+    }
+
+    case SpecimenAliquots(pnumber) => {
+      specimenAliquots(pnumber)
       context.stop(self)
     }
 
@@ -41,6 +48,11 @@ class PatientService(requestContext: RequestContext) extends Actor {
   def studySpecimens(pnumber: String) = {
     log.info(s"request for study specimens: $pnumber")
     requestContext.complete(PatientRepository.studySpecimens(pnumber))
+  }
+
+  def specimenAliquots(pnumber: String) = {
+    log.info(s"request for aliquots: $pnumber")
+    requestContext.complete(PatientRepository.aliquots(pnumber))
   }
 
   def specimenCounts(pnumber: String) = {
