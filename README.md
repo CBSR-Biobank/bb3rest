@@ -1,4 +1,4 @@
-# A REDCap pluing for Biobank
+# A REDCap plugin for Biobank
 
 Biobank is an application that manages the collection, processing and storage of biological
 specimens. REDCap (Research Electronic Data Capture) is a browser-based, metadata-driven EDC
