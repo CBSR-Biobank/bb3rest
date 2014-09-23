@@ -7,7 +7,7 @@ databases. This plugin allows REDCap to query the inventory at specimen storage 
 patient in a a REDCap study.
 
 The plugin is accessible by adding a bookmark to a study in REDCap. Once on the plugin page, the
-user choose to display:
+user can choose to display the following:
 
 * The count of specimens categorized by storage facility and specimen type. *[add screenshot here]*
 
@@ -32,6 +32,11 @@ server.
 Before the plugin can be used, configuration information is required by the plugin. The following
 sections provide details on what is required. Most of this information can be provided by the Biobank
 support staff.
+
+### Biobank support staff contact information
+
+A telephone number and email address for a contact person that can provide support information for
+the Biobank software.
 
 ### Biobank server definition
 
