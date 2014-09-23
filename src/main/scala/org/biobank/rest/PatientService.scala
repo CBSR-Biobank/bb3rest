@@ -8,6 +8,7 @@ import akka.io.IO
 
 import spray.routing.RequestContext
 import spray.httpx.SprayJsonSupport
+import spray.http.StatusCodes
 
 import scala.util.{ Success, Failure }
 
@@ -47,7 +48,7 @@ class PatientService(requestContext: RequestContext) extends Actor {
 
   def studySpecimens(pnumber: String) = {
     log.info(s"request for study specimens: $pnumber")
-    requestContext.complete(PatientRepository.studySpecimens(pnumber))
+    requestContext.complete(PatientRepository.studySpecimenTypes(pnumber))
   }
 
   def specimenAliquots(pnumber: String) = {
