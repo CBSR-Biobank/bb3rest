@@ -4,7 +4,7 @@ import spray.json.{ JsonFormat, DefaultJsonProtocol }
 
 case class SpecimenCount(specimenType: String, count: Int)
 
-case class CenterSpecimenCounts(storageCenter: String, specimenTypes: List[SpecimenCount])
+case class CenterSpecimenCounts(storageCenter: String, specimenTypeCounts: List[SpecimenCount])
 
 case class PatientSpecimenCounts(pnumber: String, study: String, storageCenters: List[CenterSpecimenCounts])
 
